@@ -1,7 +1,24 @@
 package com.ace.algo;
 
+import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Integer.MIN_VALUE;
+
 public class BinaryNumber
 {
+    int reverse(int x)
+    {
+        int rev = 0;
+        while (x != 0)
+        {
+            int pop = x % 10;
+            x /= 10;
+            if (rev > MAX_VALUE / 10 || (rev == MAX_VALUE / 10 && pop > 7)) return 0;
+            if (rev < MIN_VALUE / 10 || (rev == MIN_VALUE / 10 && pop < -8)) return 0;
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+
     public String add(String aString, String bString)
     {
         int length = Math.max(aString.length(), bString.length());
