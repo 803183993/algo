@@ -6,7 +6,19 @@ import java.util.List;
 
 public class Collections
 {
-
+    public int getMaxArea(int[] height)
+    {
+        int maxarea = 0;
+        for (int i = 0; i < height.length; i++)
+        {
+            for (int j = i + 1; j < height.length; j++)
+            {
+                maxarea = Math.max(maxarea, Math.min(height[i], height[j]) * (j - i));
+                System.out.println(maxarea);
+            }
+        }
+        return maxarea;
+    }
 
     public List<Integer> addTwoNumbers(List<Integer> l1, List<Integer> l2)
     {

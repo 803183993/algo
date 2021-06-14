@@ -10,6 +10,12 @@ import static org.hamcrest.Matchers.is;
 public class CollectionsTest
 {
     @Test
+    public void getLongestPalindrome()
+    {
+        assertThat(new Collections().getMaxArea(new int[]{1, 8, 6, 2, 5, 4, 8, 3, 7}), is(49));
+    }
+
+    @Test
     public void shouldReturnLongestSubstringWithoutRepeatingCharacters()
     {
         assertThat(new Collections().getSubString("abcabcbb"), is(3));
