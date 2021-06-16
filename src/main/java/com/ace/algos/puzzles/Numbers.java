@@ -1,4 +1,4 @@
-package com.ace.algo;
+package com.ace.algos.puzzles;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +60,7 @@ public class Numbers
             return false;
         }
         int rev = 0;
-        int y = x;
+        @SuppressWarnings("SuspiciousNameCombination") int y = x;
         while (y != 0)
         {
             int remainder = y % 10;

@@ -1,4 +1,4 @@
-package com.ace.algo;
+package com.ace.algos.puzzles;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
