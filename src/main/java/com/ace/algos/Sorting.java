@@ -6,67 +6,16 @@ public class Sorting
 {
     private static final int MIN_MERGE = 32;
 
+    public int[] mergeSort(int[] numbers)
+    {
+        print(numbers, 0);
+        mergeSortLeftAndRight(numbers, numbers.length);
+        return numbers;
+    }
+
     public int[] quickSort(int[] numbers)
     {
         return quickSort(numbers, 0, numbers.length - 1);
-    }
-
-    private void insertionSort(int[] numbers, int left, int right)
-    {
-        for (int i = left + 1; i <= right; i++)
-        {
-            int temp = numbers[i];
-            int j = i - 1;
-            while (j >= left && numbers[j] > temp)
-            {
-                numbers[j + 1] = numbers[j];
-                j--;
-            }
-            numbers[j + 1] = temp;
-        }
-    }
-
-    private void merge(int[] numbers, int l, int m, int r)
-    {
-        int len1 = m - l + 1, len2 = r - m;
-        int[] left = new int[len1];
-        int[] right = new int[len2];
-        System.arraycopy(numbers, l, left, 0, len1);
-        for (int x = 0; x < len2; x++)
-        {
-            right[x] = numbers[m + 1 + x];
-        }
-
-        int i = 0;
-        int j = 0;
-        int k = l;
-
-        while (i < len1 && j < len2)
-        {
-            if (left[i] <= right[j])
-            {
-                numbers[k] = left[i];
-                i++;
-            }
-            else
-            {
-                numbers[k] = right[j];
-                j++;
-            }
-            k++;
-        }
-        while (i < len1)
-        {
-            numbers[k] = left[i];
-            k++;
-            i++;
-        }
-        while (j < len2)
-        {
-            numbers[k] = right[j];
-            k++;
-            j++;
-        }
     }
 
     public int[] timSort(int[] numbers)
@@ -88,56 +37,6 @@ public class Sorting
             }
         }
         return numbers;
-    }
-
-    private int getMinimumRunLength(int n)
-    {
-        int r = 0;
-        while (n >= MIN_MERGE)
-        {
-            r |= (n & 1);
-            n >>= 1;
-        }
-        return n + r;
-    }
-
-    private int[] quickSort(int[] numbers, int low, int high)
-    {
-        if (low < high + 1)
-        {
-            int p = partition(numbers, low, high);
-            quickSort(numbers, low, p - 1);
-            quickSort(numbers, p + 1, high);
-        }
-        return numbers;
-    }
-
-    private int partition(int[] numbers, int low, int high)
-    {
-        swap(numbers, low, getPivot(low, high));
-        int border = low + 1;
-        for (int i = border; i <= high; i++)
-        {
-            if (numbers[i] < numbers[low])
-            {
-                swap(numbers, i, border++);
-            }
-        }
-        swap(numbers, low, border - 1);
-        return border - 1;
-    }
-
-    private void swap(int[] numbers, int index1, int index2)
-    {
-        int temp = numbers[index1];
-        numbers[index1] = numbers[index2];
-        numbers[index2] = temp;
-    }
-
-    private int getPivot(int low, int high)
-    {
-        // return number between high and low inclusive
-        return new Random().nextInt(high - low + 1) + low;
     }
 
     public int[] insertionSort(int[] numbers)
@@ -208,48 +107,166 @@ public class Sorting
         return numbers;
     }
 
-    public int binarySearch(int[] unsortedNumbers, int value)
+    private void mergeSortLeftAndRight(int[] numbers, int n)
     {
-        int[] sortedNumbers = bubbleSort(unsortedNumbers);
-        int lowIndex = 0;
-        int highIndex = sortedNumbers.length - 1;
-
-        if (sortedNumbers[highIndex] == value)
+        if (n < 2)
         {
-            return highIndex;
+            return; // if its only two, we can sort and merge
         }
-        while (lowIndex <= highIndex)
+        int mid = n / 2;
+        int[] left = new int[mid];
+        int[] right = new int[n - mid];
+
+        // create new array with numbers to the left
+        System.arraycopy(numbers, 0, left, 0, mid);
+        // create new array with numbers to the right
+        if (n - mid >= 0) System.arraycopy(numbers, mid, right, 0, n - mid);
+
+        mergeSortLeftAndRight(left, mid);
+        mergeSortLeftAndRight(right, n - mid);
+
+        merge(numbers, left, right, mid, n - mid);
+    }
+
+    private void merge(int[] numbers, int[] l, int[] r, int left, int right)
+    {
+        System.out.println("Merging left and right");
+        print(numbers, 0);
+        print(l, left);
+        print(r, right);
+
+        int i = 0, j = 0, k = 0;
+        while (i < left && j < right)
         {
-            int middleIndex = (highIndex + lowIndex) / 2;
-            if (sortedNumbers[middleIndex] < value)
+            if (l[i] <= r[j])
             {
-                lowIndex = middleIndex;
-            }
-            else if (sortedNumbers[middleIndex] > value)
-            {
-                highIndex = middleIndex;
+                numbers[k++] = l[i++];
             }
             else
             {
-                return middleIndex;
+                numbers[k++] = r[j++];
             }
         }
-        throw new IllegalArgumentException();
-    }
 
-    public int linearSearchByValue(int[] unsortedNumbers, int value)
-    {
-        int[] sortedNumbers = insertionSort(unsortedNumbers);
-
-        for (int i = 0; i < sortedNumbers.length; i++)
+        while (i < left) // copy left numbers
         {
-            if (sortedNumbers[i] == value)
+            numbers[k++] = l[i++];
+        }
+        while (j < right) // copy right numbers
+        {
+            numbers[k++] = r[j++];
+        }
+    }
+
+    private void insertionSort(int[] numbers, int left, int right)
+    {
+        for (int i = left + 1; i <= right; i++)
+        {
+            int temp = numbers[i];
+            int j = i - 1;
+            while (j >= left && numbers[j] > temp)
             {
-                return i;
+                numbers[j + 1] = numbers[j];
+                j--;
+            }
+            numbers[j + 1] = temp;
+        }
+    }
+
+    private void merge(int[] numbers, int l, int m, int r)
+    {
+        int len1 = m - l + 1, len2 = r - m;
+        int[] left = new int[len1];
+        int[] right = new int[len2];
+        System.arraycopy(numbers, l, left, 0, len1);
+        for (int x = 0; x < len2; x++)
+        {
+            right[x] = numbers[m + 1 + x];
+        }
+
+        int i = 0;
+        int j = 0;
+        int k = l;
+
+        while (i < len1 && j < len2)
+        {
+            if (left[i] <= right[j])
+            {
+                numbers[k] = left[i];
+                i++;
+            }
+            else
+            {
+                numbers[k] = right[j];
+                j++;
+            }
+            k++;
+        }
+        while (i < len1)
+        {
+            numbers[k] = left[i];
+            k++;
+            i++;
+        }
+        while (j < len2)
+        {
+            numbers[k] = right[j];
+            k++;
+            j++;
+        }
+    }
+
+
+    private int getMinimumRunLength(int n)
+    {
+        int r = 0;
+        while (n >= MIN_MERGE)
+        {
+            r |= (n & 1);
+            n >>= 1;
+        }
+        return n + r;
+    }
+
+    private int[] quickSort(int[] numbers, int low, int high)
+    {
+        if (low < high + 1)
+        {
+            int p = partition(numbers, low, high);
+            quickSort(numbers, low, p - 1);
+            quickSort(numbers, p + 1, high);
+        }
+        return numbers;
+    }
+
+    private int partition(int[] numbers, int low, int high)
+    {
+        swap(numbers, low, getPivot(low, high));
+        int border = low + 1;
+        for (int i = border; i <= high; i++)
+        {
+            if (numbers[i] < numbers[low])
+            {
+                swap(numbers, i, border++);
             }
         }
-        throw new IllegalArgumentException();
+        swap(numbers, low, border - 1);
+        return border - 1;
     }
+
+    private void swap(int[] numbers, int index1, int index2)
+    {
+        int temp = numbers[index1];
+        numbers[index1] = numbers[index2];
+        numbers[index2] = temp;
+    }
+
+    private int getPivot(int low, int high)
+    {
+        // return number between high and low inclusive
+        return new Random().nextInt(high - low + 1) + low;
+    }
+
 
     private void print(int[] sortedList, int count)
     {
