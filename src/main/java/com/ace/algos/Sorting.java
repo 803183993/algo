@@ -6,6 +6,78 @@ public class Sorting
 {
     private static final int MIN_MERGE = 32;
 
+    public int[] bucketSort(int[] numbers, int range)
+    {
+        int[] bucket = new int[range];
+        int[] sortedNumbers = new int[numbers.length];
+
+        for (int number : numbers)
+        {
+            bucket[number]++;
+        }
+
+        int outPos = 0;
+        for (int i = 0; i < bucket.length; i++)
+        {
+            for (int j = 0; j < bucket[i]; j++)
+            {
+                sortedNumbers[outPos++] = i;
+            }
+        }
+
+        return sortedNumbers;
+    }
+
+    public int[] heapSort(int[] numbers)
+    {
+        int n = numbers.length;
+
+        // Build heap (rearrange array)
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapify(numbers, n, i);
+
+        // One by one extract an element from heap
+        for (int i = n - 1; i > 0; i--)
+        {
+            // Move current root to end
+            int temp = numbers[0];
+            numbers[0] = numbers[i];
+            numbers[i] = temp;
+
+            // call max heapify on the reduced heap
+            heapify(numbers, i, 0);
+        }
+        return numbers;
+    }
+
+    public int[] countingSort(int[] numbers, int range)
+    {
+        int n = numbers.length;
+        int[] output = new int[n];
+        int[] counts = new int[range];
+
+        // store count of each number
+        for (int number : numbers)
+        {
+            ++counts[number];
+        }
+
+        // store actual position of number
+        for (int i = 1; i < counts.length; ++i)
+        {
+            counts[i] += counts[i - 1];
+        }
+
+        for (int i = n - 1; i >= 0; i--)
+        {
+            output[counts[numbers[i]] - 1] = numbers[i];
+            --counts[numbers[i]];
+        }
+
+        System.arraycopy(output, 0, numbers, 0, n);
+        return output;
+    }
+
     public int[] mergeSort(int[] numbers)
     {
         print(numbers, 0);
@@ -105,6 +177,35 @@ public class Sorting
             }
         }
         return numbers;
+    }
+
+    void heapify(int[] numbers, int n, int i)
+    {
+        int largest = i; // Initialize largest as root
+        int l = 2 * i + 1; // left = 2*i + 1
+        int r = 2 * i + 2; // right = 2*i + 2
+
+        // If left child is larger than root
+        if (l < n && numbers[l] > numbers[largest])
+        {
+            largest = l;
+        }
+
+        // If right child is larger than largest so far
+        if (r < n && numbers[r] > numbers[largest])
+        {
+            largest = r;
+        }
+
+        // If largest is not root
+        if (largest != i)
+        {
+            int swap = numbers[i];
+            numbers[i] = numbers[largest];
+            numbers[largest] = swap;
+            // Recursively heapify the affected sub-tree
+            heapify(numbers, n, largest);
+        }
     }
 
     private void mergeSortLeftAndRight(int[] numbers, int n)
@@ -266,7 +367,6 @@ public class Sorting
         // return number between high and low inclusive
         return new Random().nextInt(high - low + 1) + low;
     }
-
 
     private void print(int[] sortedList, int count)
     {
