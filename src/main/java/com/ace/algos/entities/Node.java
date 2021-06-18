@@ -5,12 +5,12 @@ import java.util.*;
 public class Node<T>
 {
     private final T value;
-    private final Set<Node<T>> children;
+    private final Set<Node<T>> neighbours;
 
     public Node(T value)
     {
         this.value = value;
-        this.children = new HashSet<>();
+        this.neighbours = new HashSet<>();
     }
 
     public T getValue()
@@ -18,16 +18,16 @@ public class Node<T>
         return value;
     }
 
-    public Set<Node<T>> getChildren()
+    public Set<Node<T>> getNeighbours()
     {
-        return children;
+        return neighbours;
     }
 
     public void connect(Node<T> node)
     {
         if (this == node) throw new IllegalArgumentException("Can't connect node to itself");
-        this.children.add(node);
-        node.children.add(this);
+        this.neighbours.add(node);
+        node.neighbours.add(this);
     }
 
     /**
@@ -48,7 +48,7 @@ public class Node<T>
 
         Node<T> currentNode;
 
-        Set<Node<T>> alreadyVisited = new HashSet<>();
+        //Set<Node<T>> alreadyVisited = new HashSet<>();
         while (!queue.isEmpty())
         {
             currentNode = queue.remove();
@@ -60,9 +60,9 @@ public class Node<T>
             }
             else
             {
-                alreadyVisited.add(currentNode);
-                queue.addAll(currentNode.getChildren());
-                queue.removeAll(alreadyVisited);
+                //alreadyVisited.add(currentNode);
+                queue.addAll(currentNode.getNeighbours());
+                //queue.removeAll(alreadyVisited);
             }
         }
 

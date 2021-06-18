@@ -1,6 +1,7 @@
 package com.ace.algos;
 
 import com.ace.algos.entities.Node;
+import com.ace.algos.entities.Tree;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,7 +12,23 @@ public class SearchTest
     private static final int[] UNSORTED_NUMBERS = new int[]{10, 17, 13, 15, 2, 11, 16, 10, 14, 18};
 
     @Test
-    public void shouldReturnSpecifiedNumberFromTreeUsingBreadthFirstSearch()
+    public void shouldReturnSpecifiedNumberFromTreeUsingBreadthFirstSearchAndDepthFirstSearch()
+    {
+        Tree<Integer> root = Tree.of(10);
+        Tree<Integer> rootFirstChild = root.addChild(2);
+        Tree<Integer> rootSecondChild = root.addChild(4);
+        Tree<Integer> childOfSecondChild = rootFirstChild.addChild(3);
+
+        //noinspection OptionalGetWithoutIsPresent
+        assertThat(Tree.breadthFirstSearch(2, root).get().getValue(), is(rootFirstChild.getValue()));
+        //noinspection OptionalGetWithoutIsPresent
+        assertThat(Tree.breadthFirstSearch(4, root).get().getValue(), is(rootSecondChild.getValue()));
+        //noinspection OptionalGetWithoutIsPresent
+        assertThat(Tree.breadthFirstSearch(3, root).get().getValue(), is(childOfSecondChild.getValue()));
+    }
+
+    @Test
+    public void shouldReturnSpecifiedNumberFromGraphUsingBreadthFirstSearch()
     {
         Node<Integer> start = new Node<>(10);
         Node<Integer> firstChild = new Node<>(2);
@@ -25,7 +42,9 @@ public class SearchTest
         start.connect(secondChild);
 
         //noinspection OptionalGetWithoutIsPresent
-        assertThat(Node.breadthFirstSearch(4, start).get().getValue(), is(secondChild.getValue()));
+        assertThat(Node.breadthFirstSearch(4, firstChild).get().getValue(), is(secondChild.getValue()));
+        //noinspection OptionalGetWithoutIsPresent
+        assertThat(Node.breadthFirstSearch(3, firstChild).get().getValue(), is(childOfFirstChild.getValue()));
         //noinspection OptionalGetWithoutIsPresent
         assertThat(Node.breadthFirstSearch(3, secondChild).get().getValue(), is(childOfFirstChild.getValue()));
     }
