@@ -75,4 +75,10 @@ public class PuzzlesTest
         assertThat(new Puzzles().getDuplicates(new int[]{4, 3, 2, 7, 8, 2, 3, 1}), is(new Integer[]{2, 3}));
         assertThat(new Puzzles().getDuplicates(new int[]{4, 3, 2, 7, 8, 8, 3, 1}), is(new Integer[]{8, 3}));
     }
+
+    @Test
+    public void frequencySort()
+    {
+        assertThat(new Puzzles().frequencySort("My news room produces good news"), is("oooooeeesssddnnrrwwcgMmpuy"));
+    }
 }
